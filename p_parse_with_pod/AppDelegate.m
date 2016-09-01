@@ -4,9 +4,11 @@
 //
 //  Created by Jaime_Andrade on 9/1/16.
 //  Copyright © 2016 lab5. All rights reserved.
-//
+///
 
 #import "AppDelegate.h"
+#import "Parse/Parse.h"
+#import "AppUtilities.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +19,31 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [Parse setApplicationId:APPLICATION_ID clientKey: CLIENT_KEY];
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+    PFObject *mipersona = [PFObject objectWithClassName:@"Persona"];
+    [mipersona setObject:@"MIGUEL" forKey:@"nombre"];
+    [mipersona setObject:@"zambrano" forKey:@"apellido"];
+    [mipersona setObject:@32 forKey:@"edad"];
+    
+    
+    // Versión síncrona
+        //[miPersona save];
+    
+    // Versión asíncrona
+    [mipersona saveInBackgroundWithBlock:^(BOOL secceeded, NSError *error){
+        if(!error){
+            NSLog(@"LA PERSONA SE HA GUARDADO CORRECTAMENTE");
+        }
+        else{
+            NSLog(@"SE HA PRODUCIDO UN ERROR");
+        }
+    }];
+    
+    //metodo sin internet, encola la peticion y se ejecuta cuando haya conección de internet
+        //[miPersona saveEventually];
+    
     return YES;
 }
 
