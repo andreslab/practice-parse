@@ -24,8 +24,8 @@
     
     PFObject *mipersona = [PFObject objectWithClassName:@"Persona"];
     [mipersona setObject:@"MIGUEL" forKey:@"nombre"];
-    [mipersona setObject:@"zambrano" forKey:@"apellido"];
-    [mipersona setObject:@32 forKey:@"edad"];
+    [mipersona setObject:@"RAMIREZ" forKey:@"apellido"];
+    [mipersona setObject:@21 forKey:@"edad"];
     
     
     // Versión síncrona
@@ -37,12 +37,45 @@
             NSLog(@"LA PERSONA SE HA GUARDADO CORRECTAMENTE");
         }
         else{
-            NSLog(@"SE HA PRODUCIDO UN ERROR");
+            NSLog(@"SE HA PRODUCIDO UN ERROR EN LA PERSONA");
         }
     }];
     
     //metodo sin internet, encola la peticion y se ejecuta cuando haya conección de internet
         //[miPersona saveEventually];
+    
+    
+    
+    //***************************Guardar nota de una persona************************************
+    
+    PFObject *miNota = [PFObject objectWithClassName:@"Nota"];
+    [miNota setObject:@8 forKey:@"nota"];
+    //paso como parámetro el objecto persona generado anteriormente.
+    [miNota setObject:mipersona forKey:@"notaPersona"];
+    //[miNota save];
+    [miNota saveInBackgroundWithBlock:^(BOOL secceeded, NSError *error){
+        if(!error){
+            NSLog(@"LA NOTA SE HA GUARDADO CORRECTAMENTE");
+        }
+        else{
+            NSLog(@"SE HA PRODUCIDO UN ERROR EN LA NOTA");
+        }
+    }];
+    
+    
+    //***************************Consulta de registro ******************************************
+    PFQuery *query = [PFQuery queryWithClassName:@"Persona"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if(!error){
+            NSLog(@"La busqueda se ha ejecutado y el NSArray objects contiene los resultados de la mismo");
+        }
+        else{
+            NSLog(@"se ha producido un error al ejecutar la búqueda");
+        }
+    }];
+    //cuando la búsqueda es más detallada, se agrega el ntes de la ejecución del metodo find la siguiente linea
+    [query whereKey:@"nombre" equalTo:@"MIGUEL"];
+    
     
     return YES;
 }
